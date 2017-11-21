@@ -1,4 +1,4 @@
-##DO Spaces Wordpress Sync
+### DO Spaces Wordpress Sync
 This WordPress plugin syncs your media library with [DigitalOcean Spaces](https://goo.gl/SX2UwH) Container.
 
 ## Description
