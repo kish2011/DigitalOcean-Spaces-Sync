@@ -139,8 +139,8 @@
           </div>
 
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-            <input id="dos_storage_url" name="dos_storage_url" type="text"
-                   value="<?php echo esc_attr( get_option('dos_storage_url') ); ?>"
+            <input id="upload_url_path" name="upload_url_path" type="text"
+                   value="<?php echo esc_attr( get_option('upload_url_path') ); ?>"
                    class="regular-text code"/>
             <div class="dos__description">
               <?php _e('Enter storage public domain or subdomain if the files are stored only in the cloud storage', 'dos'); ?>
