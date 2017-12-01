@@ -162,8 +162,8 @@
           </div>
 
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-            <input id="dos_uploads_path" name="dos_uploads_path" type="text"
-                   value="<?php echo esc_attr( get_option('dos_uploads_path') ); ?>"
+            <input id="upload_path" name="upload_path" type="text"
+                   value="<?php echo esc_attr( get_option('upload_path') ); ?>"
                    class="regular-text code"/>
             <div class="dos__description">
               <?php _e('Local path to the uploaded files. By default', 'dos'); ?>: <code>wp-content/uploads</code>

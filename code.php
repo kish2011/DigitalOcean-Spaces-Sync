@@ -12,8 +12,8 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPA
 function dos_settings_page() {
 
   // Default settings
-  if ( get_option('dos_uploads_path') == 'wp-content' . DIRECTORY_SEPARATOR . 'uploads' || get_option('dos_uploads_path') == null  ) {
-    update_option('dos_uploads_path', WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'uploads');
+  if ( get_option('upload_path') == 'wp-content' . DIRECTORY_SEPARATOR . 'uploads' || get_option('upload_path') == null  ) {
+    update_option('upload_path', WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'uploads');
   }
 
   if ( get_option('dos_endpoint') == null ) {
@@ -162,7 +162,7 @@ function dos_test_connection() {
  */
 function dos_filepath( $file ) {
 
-  $dir = get_option('dos_uploads_path');
+  $dir = get_option('upload_path');
   $file = str_replace($dir, '', $file);
   $file = get_option('dos_storage_path') . $file;
   $file = str_replace('\\', '/', $file);
