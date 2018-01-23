@@ -304,6 +304,44 @@ function dos_file_delete( $file, $attempt = 0 ) {
 }
 
 /**
+ * Upload files to storage
+ *
+ * @param int $postID Id upload file
+ * @return bool
+ */
+function dos_storage_upload( $postID ) {
+
+  if ( wp_attachment_is_image($postID) == false ) {
+
+    $file = get_attached_file($postID);
+
+    if ( get_option('dos_debug') == 1 ) {
+
+      $log = new Katzgrau\KLogger\Logger(plugin_dir_path(__FILE__) . '/logs', Psr\Log\LogLevel::DEBUG,
+        array('prefix' => __FUNCTION__ . '_', 'extension' => 'log'));
+      $log->info('Starts unload file');
+      $log->info('File path: ' . $file);
+      //$log->info("MetaData: \n" . dos_dump($meta));
+
+    }
+
+    if ( get_option('dos_lazy_upload') == 1 ) {
+
+      wp_schedule_single_event( time(), 'dos_schedule_upload', array($file));
+
+    } else {
+
+      dos_file_upload($file);
+
+    }
+
+  }
+
+  return true;
+  
+}
+
+/**
  * Deletes the file from storage
  * @param string $file Full path to file
  * @return string
