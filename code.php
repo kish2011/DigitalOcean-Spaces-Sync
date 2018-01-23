@@ -200,6 +200,9 @@ function dos_dump( $data ) {
  */
 function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
 
+  // init cloud filesystem
+  $filesystem = __DOS();
+
   if (get_option('dos_debug') == 1) {
 
     $log = new Katzgrau\KLogger\Logger(
@@ -208,7 +211,7 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
     );
 
     if ($attempt > 0) {
-      $log->notice('Attempt № ' . $attempt);
+      $log->notice('Attempt # ' . $attempt);
     }
 
   }
@@ -230,9 +233,9 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
       }
     }
 
-    if ( ( is_readable($pathToFile) ) and ( dos_check_for_sync($pathToFile) ) ) {
-      
-      $filesystem = __DOS();
+    if ( is_readable($pathToFile) ) {
+
+      $log->info("File is readable: " . $pathToFile);
 
       $filesystem->put( dos_filepath($pathToFile), file_get_contents($pathToFile), [
         'visibility' => AdapterInterface::VISIBILITY_PUBLIC
@@ -241,9 +244,10 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
       if (get_option('dos_debug') == 1 and isset($log)) {
         $log->info("Instance - OK");
         $log->info("Name ObJ: " . dos_filepath($pathToFile));
-        $log->info("Size: " . dos_dump($object->getSize()));
       }
       
+    } else {
+      $log->info("File is not readable: " . $pathToFile);
     }
 
     return true;
@@ -300,45 +304,6 @@ function dos_file_delete( $file, $attempt = 0 ) {
 }
 
 /**
- * Upload files to storage
- *
- * @param int $postID Id upload file
- * @return bool
- */
-function dos_storage_upload( $postID ) {
-
-  if ( wp_attachment_is_image($postID) == false ) {
-
-    $file = get_attached_file($postID);
-
-    if ( get_option('dos_debug') == 1 ) {
-
-      $log = new Katzgrau\KLogger\Logger(plugin_dir_path(__FILE__) . '/logs', Psr\Log\LogLevel::DEBUG,
-        array('prefix' => __FUNCTION__ . '_', 'extension' => 'log'));
-      $log->info('Starts unload file');
-      $log->info('File path: ' . $file);
-      //$log->info("MetaData: \n" . dos_dump($meta));
-
-    }
-
-    if ( get_option('dos_lazy_upload') == 1 ) {
-
-      wp_schedule_single_event( time(), 'dos_schedule_upload', array($file));
-
-    } else {
-
-      dos_file_upload($file);
-
-    }
-
-
-  }
-
-  return true;
-
-}
-
-/**
  * Deletes the file from storage
  * @param string $file Full path to file
  * @return string
@@ -378,6 +343,9 @@ function dos_storage_delete( $file ) {
  */
 function dos_thumbnail_upload( $metadata ) {
 
+  $paths = array();
+  $upload_dir = wp_upload_dir();
+
   if (get_option('dos_debug') == 1) {
 
     $log = new Katzgrau\KLogger\Logger(plugin_dir_path(__FILE__) . '/logs', Psr\Log\LogLevel::DEBUG,
@@ -386,86 +354,72 @@ function dos_thumbnail_upload( $metadata ) {
 
   }
 
+  // collect original file path
   if ( isset($metadata['file']) ) {
 
-    $upload_dir = wp_upload_dir();
-    $path = $upload_dir['path'] . DIRECTORY_SEPARATOR . basename($metadata['file']);
+    $path = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'];
+    array_push($paths, $path);
+    $log->info("Path to be processed - " . $path);
 
-    if ( get_option('dos_lazy_upload') == 1 ) {
+    // set basepath for other sizes
+    $file_info = pathinfo($path);
+    $basepath = isset($file_info['extension'])
+        ? str_replace($file_info['filename'] . "." . $file_info['extension'], "", $path)
+        : $path;
 
-      wp_schedule_single_event(time() + 2, 'dos_schedule_upload', array($path, 0, true));
+  }
+
+  // collect size files path
+  if ( isset($metadata['sizes']) ) {
+    $log->info("There are multiple sizes of original image");
+
+    foreach ( $metadata['sizes'] as $size ) {
+
+      if ( isset($size['file']) ) {
+
+        $path = $basepath . $size['file'];
+        array_push($paths, $path);
+        $log->info("Path to be processed - " . $path);
+
+      }
+
+    }
+
+  }
+
+  // process paths
+  foreach ($paths as $filepath) {
+    
+    if ( get_option('dos_lazy_upload') ) {
+
+      wp_schedule_single_event(time() + 2, 'dos_schedule_upload', array($filepath, 0, true));
 
       if (get_option('dos_debug') == 1 and isset($log)) {
-        $log->info("Add schedule. File - " . $path);
+        $log->info("Add schedule. File - " . $filepath);
       }
 
     } else {
 
-      dos_file_upload($path, 0, true);
-      if (get_option('dos_debug') == 1 and isset($log)) {
-        $log->info("Upload file - " . $path);
-      }
+      // upload file
+      $log->info("Uploading file - " . $filepath);
+      dos_file_upload($filepath, 0, true);
 
-    }
-    
-    if ( isset($metadata['sizes']) ) {
-
-      foreach ( $metadata['sizes'] as $thumb ) {
-
-        if ( isset($thumb['file']) ) {
-
-          $path = $upload_dir['path'] . DIRECTORY_SEPARATOR . $thumb['file'];
-
-          if ( get_option('dos_lazy_upload') == 1 ) {
-
-            wp_schedule_single_event(time() + 2, 'dos_schedule_upload', array($path, 0, true));
-
-            if ( get_option('dos_debug') == 1 and isset($log)) {
-              $log->info("Add schedule. File - " . $path);
-            }
-
-          } else {
-
-            dos_file_upload($path, 0, true);
-
-            if (get_option('dos_debug') == 1 and isset($log)) {
-              $log->info("Upload file - " . $path);
-            }
-
-          }
-
-        }
-
+      // log data
+      if ( get_option('dos_debug') ) {
+        $log->info("Uploaded file - " . $filepath);
       }
 
     }
 
   }
 
-  if ( get_option('dos_debug') == 1 and isset($log) ) {
+  // if ( get_option('dos_debug') == 1 and isset($log) ) {
 
-    $log->debug("Schedules dump: " . dos_dump(_get_cron_array()));
+  //   $log->debug("Schedules dump: " . dos_dump(_get_cron_array()));
 
-  }
+  // }
 
   return $metadata;
-
-}
-
-/**
- * Checks directory for files. If there is no files returns true, otherwise null.
- * @param $dir
- * @return bool|null
- */
-function dos_is_dir_empty( $dir ) {
-
-  if ( !is_readable($dir) ) {
-
-    return null;
-
-  }
-
-  return ( count( scandir($dir) ) == 2 );
 
 }
 
@@ -483,23 +437,6 @@ function dos_glob_recursive( $pattern, $flags = 0 ) {
   }
 
   return $files;
-
-}
-
-/**
- * Returns an array list of files in a directory $dir
- * @param string $dir
- * @return array
- */
-function dos_get_files_arr( $dir ) {
-
-  get_option('dos_filter') != '' ?
-    $filter = trim(get_option('dos_filter')) :
-    $filter = '*';
-
-  $dir = rtrim($dir, '/');
-
-  return array_filter(dos_glob_recursive($dir . DIRECTORY_SEPARATOR . '{' . $filter . '}', GLOB_BRACE), 'is_file');
 
 }
 
