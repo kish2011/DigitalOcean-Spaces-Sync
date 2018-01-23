@@ -235,8 +235,6 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
 
     if ( is_readable($pathToFile) ) {
 
-      $log->info("File is readable: " . $pathToFile);
-
       $filesystem->put( dos_filepath($pathToFile), file_get_contents($pathToFile), [
         'visibility' => AdapterInterface::VISIBILITY_PUBLIC
       ]);
@@ -246,8 +244,6 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
         $log->info("Name ObJ: " . dos_filepath($pathToFile));
       }
       
-    } else {
-      $log->info("File is not readable: " . $pathToFile);
     }
 
     return true;
@@ -397,7 +393,6 @@ function dos_thumbnail_upload( $metadata ) {
 
     $path = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'];
     array_push($paths, $path);
-    $log->info("Path to be processed - " . $path);
 
     // set basepath for other sizes
     $file_info = pathinfo($path);
@@ -409,7 +404,6 @@ function dos_thumbnail_upload( $metadata ) {
 
   // collect size files path
   if ( isset($metadata['sizes']) ) {
-    $log->info("There are multiple sizes of original image");
 
     foreach ( $metadata['sizes'] as $size ) {
 
@@ -417,7 +411,6 @@ function dos_thumbnail_upload( $metadata ) {
 
         $path = $basepath . $size['file'];
         array_push($paths, $path);
-        $log->info("Path to be processed - " . $path);
 
       }
 
@@ -439,7 +432,6 @@ function dos_thumbnail_upload( $metadata ) {
     } else {
 
       // upload file
-      $log->info("Uploading file - " . $filepath);
       dos_file_upload($filepath, 0, true);
 
       // log data
@@ -451,11 +443,11 @@ function dos_thumbnail_upload( $metadata ) {
 
   }
 
-  // if ( get_option('dos_debug') == 1 and isset($log) ) {
+  if ( get_option('dos_debug') == 1 and isset($log) ) {
 
-  //   $log->debug("Schedules dump: " . dos_dump(_get_cron_array()));
+    $log->debug("Schedules dump: " . dos_dump(_get_cron_array()));
 
-  // }
+  }
 
   return $metadata;
 

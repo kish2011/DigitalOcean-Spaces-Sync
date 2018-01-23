@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/keeross
 Tags: digitalocean, spaces, cloud, storage, object, s3
 Requires at least: 4.6
 Tested up to: 4.9
-Stable tag: 1.0.7
+Stable tag: 1.0.7.1
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -32,6 +32,9 @@ P.S. Basically it works with all AWS S3 compatible cloud storages.
 1. Configuration screen
 
 == Changelog ==
+
+= 1.0.7.1 =
+* A hotfix for logger.
 
 = 1.0.7 =
 * Updated methods to fix non-images uploads.
