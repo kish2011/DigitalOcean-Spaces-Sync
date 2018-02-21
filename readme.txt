@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/keeross
 Tags: digitalocean, spaces, cloud, storage, object, s3
 Requires at least: 4.6
 Tested up to: 4.9
-Stable tag: 1.0.7.1
+Stable tag: 1.0.8
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -12,7 +12,7 @@ This WordPress plugin syncs your media library with DigitalOcean Spaces Containe
 
 == Description ==
 
-DO Spaces Sync plugin connects your Media Library to a container in DigitalOcean Spaces. It syncs data from your website to cloud storage
+DigitalOcean Spaces Sync plugin connects your Media Library to a container in DigitalOcean Spaces. It syncs data from your website to cloud storage
 and replaces links to images (optional). You may keep the media locally (on your server) and make backup copy to cloud storage, or just serve it all 
 from DigitalOcean Spaces.
 
@@ -24,7 +24,7 @@ P.S. Basically it works with all AWS S3 compatible cloud storages.
 
 1. Upload the plugin files to the `/wp-content/plugins/do-spaces-sync` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Settings->DO Spaces Sync screen to configure the plugin
+3. Use the Settings->DigitalOcean Spaces Sync screen to configure the plugin
 4. Create a DigitalOcean Spaces API key and container
 
 == Screenshots ==
@@ -32,6 +32,12 @@ P.S. Basically it works with all AWS S3 compatible cloud storages.
 1. Configuration screen
 
 == Changelog ==
+
+= 1.0.8 =
+* Renamed the plugin.
+* Removed useless options.
+* Fixed file removal issue.
+* No need for region in S3Client.
 
 = 1.0.7.1 =
 * A hotfix for logger.

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: DO Spaces Sync
+ * Plugin Name: DigitalOcean Spaces Sync
  * Plugin URI: https://github.com/keeross/DO-Spaces-Wordpress-Sync
  * Description: This WordPress plugin syncs your media library with DigitalOcean Spaces Container.
- * Version: 1.0.7.1
+ * Version: 1.0.8
  * Author: keeross
  * Author URI: https://github.com/keeross
  * License: MIT
@@ -25,7 +25,7 @@ if ( is_admin() && ( !defined('DOING_AJAX') || !DOING_AJAX ) ) {
 
     dos_incompatibile(
       __(
-        'Plugin DO Spaces Wordpress Sync requires PHP 5.3.3 or higher. The plugin has now disabled itself.',
+        'Plugin DigitalOcean Spaces Sync requires PHP 5.3.3 or higher. The plugin has now disabled itself.',
         'dos'
       )
     );
@@ -36,14 +36,14 @@ if ( is_admin() && ( !defined('DOING_AJAX') || !DOING_AJAX ) ) {
   ) {
 
     dos_incompatibile(
-      __('Plugin DO Spaces Wordpress Sync requires cURL 7.16.2+. The plugin has now disabled itself.', 'dos')
+      __('Plugin DigitalOcean Spaces Sync requires cURL 7.16.2+. The plugin has now disabled itself.', 'dos')
     );
 
   } elseif (!($curl['features'] & CURL_VERSION_SSL)) {
 
     dos_incompatibile(
       __(
-        'Plugin DO Spaces Wordpress Sync requires that cURL is compiled with OpenSSL. The plugin has now disabled itself.',
+        'Plugin DigitalOcean Spaces Sync requires that cURL is compiled with OpenSSL. The plugin has now disabled itself.',
         'dos'
       )
     );

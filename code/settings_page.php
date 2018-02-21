@@ -11,7 +11,7 @@
     <div class="row">
       
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h2>DO Spaces Sync <?php _e('Settings', 'dos'); ?></h2>
+        <h2>DigitalOcean Spaces Sync <?php _e('Settings', 'dos'); ?></h2>
       </div>
 
     </div>
@@ -19,7 +19,7 @@
     <div class="row">
       
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <?php _e('Type in your DO Spaces container access information.', 'dos'); ?>
+        <?php _e('Type in your DigitalOcean Spaces container access information.', 'dos'); ?>
         <?php _e('Don\'t have an account? <a href="https://goo.gl/SX2UwH">Create it</a>', 'dos'); ?>
       </div>
 
@@ -255,20 +255,6 @@
       <div class="row">
         
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-          <input id="dos_lazy_upload" type="checkbox" name="dos_lazy_upload"
-                 value="1" <?php checked( get_option('dos_lazy_upload'), 1); ?> />
-        </div>
-
-        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-          <?php _e( 'Deferred file upload.', 'dos' ); ?>
-          <?php _e( 'File is uploaded with a delay. This protects against errors when uploading large files ( > 50MB).', 'dos' ); ?>
-        </div>
-
-      </div>
-
-      <div class="row">
-        
-        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
           <input id="dos_debug" type="checkbox" name="dos_debug"
                  value="1" <?php checked( get_option('dos_debug'), 1); ?> />
         </div>
@@ -296,18 +282,12 @@
     
     <p>
       <img id="img-spinner" 
-           src="<?php echo plugins_url() . '/' . dirname( plugin_basename(__FILE__) ); ?>/../assets/images/do_logo.png" alt="DigitalOcean"
+           src="<?php echo plugins_url() . '/' . dirname( plugin_basename(__FILE__) ); ?>/../assets/images/do_logo.svg" alt="DigitalOcean"
            style="width: 150px;"/>
     </p>
 
     <p>
-      <strong>
-        This plugin is not official. It is not somehow sponsored, supported or developed by DigitalOcean.
-      </strong>
-    </p>
-
-    <p>
-      This plugin syncs your WordPress library with DigitalOcean Spaces Container. It may be buggy, it may sometimes fail, feel free to write issues on github.
+      This plugin syncs your WordPress library with DigitalOcean Spaces Container. It may be buggy, it may sometimes fail, feel free to write issues on github and PR.
     </p>
 
   </div>

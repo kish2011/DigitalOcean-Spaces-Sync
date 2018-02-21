@@ -38,8 +38,8 @@ function dos_settings_page() {
 function dos_create_menu(){
 
   add_options_page(
-    'DO Spaces Sync',
-    'DO Spaces Sync',
+    'DigitalOcean Spaces Sync',
+    'DigitalOcean Spaces Sync',
     'manage_options',
     __FILE__,
     'dos_settings_page'
@@ -98,7 +98,7 @@ function __DOS( $test = false ) {
       'secret' => $dos_secret,
     ],
     'endpoint' => $dos_endpoint,
-    'region' => 'ams3',
+    'region' => '',
     'version' => 'latest',
   ]);
 
@@ -238,6 +238,10 @@ function dos_file_upload( $pathToFile, $attempt = 0, $del = false ) {
       $filesystem->put( dos_filepath($pathToFile), file_get_contents($pathToFile), [
         'visibility' => AdapterInterface::VISIBILITY_PUBLIC
       ]);
+
+      if (get_option('dos_storage_file_only') == 1) {
+        dos_file_delete($pathToFile);
+      }
 
       if (get_option('dos_debug') == 1 and isset($log)) {
         $log->info("Instance - OK");
